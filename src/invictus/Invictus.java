@@ -5,6 +5,8 @@
  */
 package invictus;
 
+import environment.ApplicationStarter;
+
 /**
  *
  * @author LK
@@ -15,7 +17,7 @@ public class Invictus {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println("dont do that, again");
+        ApplicationStarter.run("Invictus", new World());
     }
     
 }
