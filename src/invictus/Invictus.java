@@ -5,6 +5,8 @@
  */
 package invictus;
 
+import environment.ApplicationStarter;
+
 /**
  *
  * @author LK
@@ -16,6 +18,7 @@ public class Invictus {
      */
     public static void main(String[] args) {
         System.out.println("dont do that");
+        ApplicationStarter.run("Invictus", new World());
     }
     
 }
