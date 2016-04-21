@@ -5,7 +5,9 @@
  */
 package invictus;
 
+import environment.Actor;
 import environment.Environment;
+import environment.Velocity;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -30,6 +32,7 @@ class World extends Environment {
 //        segments.add(new PathSegment(new Point(50, 100), new Point(50, 200)));
         
         path = new Path(segments);
+        this.getActors().add(new Enemy(null, new Point(20, 50), new Velocity(1, 4)));
     }
 
     @Override
@@ -38,6 +41,17 @@ class World extends Environment {
 
     @Override
     public void timerTaskHandler() {
+        for (Actor actor: getActors()){
+            actor.move();
+            if ((actor.getPosition().x >= this.getWidth() || (actor.getPosition().x <= 0))) {
+                actor.getVelocity().x *= -1; 
+                
+            }
+            if ((actor.getPosition().y >= this.getHeight()) || (actor.getPosition().y <= 0)){
+                actor.getVelocity().y *= -1; 
+                
+            }
+        }
     }
 
     @Override
@@ -56,6 +70,9 @@ class World extends Environment {
     public void paintEnvironment(Graphics graphics) {
         for (PathSegment segment: path.getPath()) {
             segment.draw(graphics);
+        }
+        for (Actor actor: getActors()){
+            actor.paint(graphics);
         }
     }
     
