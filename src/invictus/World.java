@@ -7,6 +7,9 @@ package invictus;
 
 import environment.Environment;
 import environment.MovableIntf;
+import environment.Velocity;
+import images.ResourceTools;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -15,38 +18,43 @@ import java.util.ArrayList;
 import path.Path;
 import path.PathEventHandler;
 import path.PathEventType;
-import path.PathSegment;
+import path.PathMoveManager;
+import path.SegmentIntf;
+import path.SimpleSegment;
 
 /**
  *
  * @author Nick
  */
 class World extends Environment implements PathEventHandler {
-    
+
     Path path;
 
+    //private final Ad ad;
+    private final PathMoveManager pmm;
+    private Menu newAd;
+
     public World() {
-        ArrayList<PathSegment> segments = new ArrayList<>();
-        segments.add(new PathSegment(0, 150, 100, 150));
-        segments.add(new PathSegment(100, 150, 100, 450));
-        segments.add(new PathSegment(100, 450, 300, 450));
-        segments.add(new PathSegment(300, 450, 300, 70));
-        segments.add(new PathSegment(300, 70, 500, 70));
-        segments.add(new PathSegment(500, 70, 500, 200));
-        segments.add(new PathSegment(500, 200, 700, 200));
-        segments.add(new PathSegment(700, 200, 700, 70));
-        segments.add(new PathSegment(700, 70, 830, 70));
-        segments.add(new PathSegment(830, 70, 830, 400));
-        segments.add(new PathSegment(830, 400, 550, 400));
-        segments.add(new PathSegment(550, 400, 550, 600));
 
+        setBackground(ResourceTools.loadImageFromResource("invictus/future-background.jpg"));
 
-        
+        ArrayList<SegmentIntf> segments = new ArrayList<>();
+        segments.add(new SimpleSegment(new Point(0, 150), new Point(100, 150)));
+        segments.add(new SimpleSegment(new Point(100, 150), new Point(100, 450)));
+        segments.add(new SimpleSegment(new Point(100, 450), new Point(300, 450)));
+        segments.add(new SimpleSegment(new Point(300, 450), new Point(300, 70)));
+        segments.add(new SimpleSegment(new Point(300, 70), new Point(500, 70)));
+        segments.add(new SimpleSegment(new Point(500, 70), new Point(500, 200)));
+        segments.add(new SimpleSegment(new Point(500, 200), new Point(900, 200)));
 
+        //ad = new Ad(new Point(0, 0), new Velocity(2, 2));
+        //getActors().add(ad);
 
+        pmm = new PathMoveManager(segments);
+        pmm.setPathEventHandler(this);
 
-        path = new Path(segments);
-        
+        newAd = new Menu(25, 20, 80, 28, Color.GRAY, "Start");
+
     }
 
     @Override
@@ -55,6 +63,9 @@ class World extends Environment implements PathEventHandler {
 
     @Override
     public void timerTaskHandler() {
+        if (pmm != null) {
+            pmm.moveAll();
+        }
     }
 
     @Override
@@ -67,20 +78,35 @@ class World extends Environment implements PathEventHandler {
 
     @Override
     public void environmentMouseClicked(MouseEvent e) {
+        if ((newAd != null) && (newAd.clicked(e.getPoint()))) {
+            Ad aAd = new Ad(new Point(0, 0), new Velocity(0, 0));
+            getActors().add(aAd);
+            pmm.addMover(aAd);
+            System.out.println("New Ad");
+        }
     }
 
     @Override
     public void paintEnvironment(Graphics graphics) {
-        for (PathSegment segment: path.getPath()) {
-            segment.draw(graphics);
+        if (pmm != null) {
+            graphics.setColor(Color.MAGENTA);
+            pmm.draw(graphics);
         }
+
+        if (newAd != null) {
+            newAd.draw(graphics);
+        }
+
     }
 
-//<editor-fold defaultstate="collapsed" desc="PathEventHandler">
     @Override
     public void pathEvent(PathEventType pathEventType, MovableIntf mover) {
+        System.out.printf(" Path Event - %s\n", pathEventType.toString());
         
+        switch (pathEventType){
+            case PATH_END:
+                // do damage to my base
+                break;
+        }
     }
-//</editor-fold>
-    
 }
