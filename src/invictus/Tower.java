@@ -13,18 +13,23 @@ import java.awt.Image;
  * @author Nick
  */
 public class Tower {
+    private final int width;
+    private final int height;
     
-    public Tower(int x, int y, int range, int damage, Image image){
+    public Tower(int x, int y, int height, int width, int range, int damage, Image image){
         this.x = x;
         this.y = y;
+        this.width = width;
+        this.height = height;
         this.damage = damage;
         this.image = image;
         this.range = range;
     }
     
     public void draw(Graphics graphics){
-//        graphics.drawImage(image, x, y, null);
-        graphics.drawOval(x, y, range, range);
+        graphics.drawImage(image, x, y, width, height, null);
+        graphics.drawOval(x + (width / 2) - range, y + (height / 2) - range, range * 2, range * 2);
+        
     }
     
     private int x,y;

@@ -58,7 +58,8 @@ class World extends Environment implements PathEventHandler {
         newAd = new Menu(25, 20, 80, 28, Color.GRAY, "Start");
         
         towers = new ArrayList<>();
-        towers.add(new Tower(22, 55, 50, 100, null));
+//        towers.add(new Tower(22, 55, 50, 100, ResourceTools.loadImageFromResource("invictus/tower_image.jpeg")));
+        
 
     }
 
@@ -95,7 +96,7 @@ class World extends Environment implements PathEventHandler {
 //            pmm.addMover(aAd);
 //            System.out.println("New Ad");
 //        } else {//if (towers != null) {
-           towers.add( new Tower(e.getX(), e.getY(), 55, 100, null));
+           towers.add( new Tower(e.getX(), e.getY(), 40, 40, 100, 100, ResourceTools.loadImageFromResource("invictus/tower_image.jpeg")));
 //        }
     }
 
