@@ -23,7 +23,8 @@ public class Tower {
     }
     
     public void draw(Graphics graphics){
-        graphics.drawImage(image, x, y, null);
+//        graphics.drawImage(image, x, y, null);
+        graphics.drawOval(x, y, range, range);
     }
     
     private int x,y;

@@ -33,9 +33,11 @@ class World extends Environment implements PathEventHandler {
     //private final Ad ad;
     private final PathMoveManager pmm;
     private Menu newAd;
+    private ArrayList<Tower> towers;
 
     public World() {
 
+        
         setBackground(ResourceTools.loadImageFromResource("invictus/future-background.jpg"));
 
         ArrayList<SegmentIntf> segments = new ArrayList<>();
@@ -54,6 +56,9 @@ class World extends Environment implements PathEventHandler {
         pmm.setPathEventHandler(this);
 
         newAd = new Menu(25, 20, 80, 28, Color.GRAY, "Start");
+        
+        towers = new ArrayList<>();
+        towers.add(new Tower(22, 55, 50, 100, null));
 
     }
 
@@ -65,6 +70,12 @@ class World extends Environment implements PathEventHandler {
     public void timerTaskHandler() {
         if (pmm != null) {
             pmm.moveAll();
+        }
+        
+        if (Math.random() < .01) {
+            Ad aAd = new Ad(new Point(0, 0), new Velocity(0, 0));
+            getActors().add(aAd);
+            pmm.addMover(aAd);
         }
     }
 
@@ -78,12 +89,14 @@ class World extends Environment implements PathEventHandler {
 
     @Override
     public void environmentMouseClicked(MouseEvent e) {
-        if ((newAd != null) && (newAd.clicked(e.getPoint()))) {
-            Ad aAd = new Ad(new Point(0, 0), new Velocity(0, 0));
-            getActors().add(aAd);
-            pmm.addMover(aAd);
-            System.out.println("New Ad");
-        }
+//        if ((newAd != null) && (newAd.clicked(e.getPoint()))) {
+//            Ad aAd = new Ad(new Point(0, 0), new Velocity(0, 0));
+//            getActors().add(aAd);
+//            pmm.addMover(aAd);
+//            System.out.println("New Ad");
+//        } else {//if (towers != null) {
+           towers.add( new Tower(e.getX(), e.getY(), 55, 100, null));
+//        }
     }
 
     @Override
@@ -91,6 +104,12 @@ class World extends Environment implements PathEventHandler {
         if (pmm != null) {
             graphics.setColor(Color.MAGENTA);
             pmm.draw(graphics);
+        }
+
+        if (towers != null) {
+            for (Tower tower : towers){
+                tower.draw(graphics);
+            }
         }
 
         if (newAd != null) {
@@ -101,7 +120,7 @@ class World extends Environment implements PathEventHandler {
 
     @Override
     public void pathEvent(PathEventType pathEventType, MovableIntf mover) {
-        System.out.printf(" Path Event - %s\n", pathEventType.toString());
+        //System.out.printf(" Path Event - %s\n", pathEventType.toString());
         
         switch (pathEventType){
             case PATH_END:
